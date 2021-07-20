@@ -57,7 +57,7 @@ def main():
                                   event.WheelRotation / event.WheelDelta)
 
     app = wx.App()
-    root = wx.Frame(None, title="OpenStreetMapPy wxPython Demo GUI",
+    root = wx.Frame(None, title="GetOSM wxPython Demo GUI",
                     size=(800, 800))
 
     map_canvas = wx.lib.statbmp.GenStaticBitmap(root, wx.ID_ANY, wx.NullBitmap,

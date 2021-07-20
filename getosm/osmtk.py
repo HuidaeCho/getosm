@@ -261,7 +261,7 @@ def main():
     root_height = root_width
     root.geometry(f"{root_width}x{root_height}")
     root.resizable(False, False)
-    root.title("OpenStreetMapPy tkinter Demo GUI")
+    root.title("GetOSM tkinter Demo GUI")
     # https://stackoverflow.com/a/5871414/16079666
     root.bind_class("Text", "<Control-a>",
                     lambda e: e.widget.tag_add(tk.SEL, "1.0", tk.END))
