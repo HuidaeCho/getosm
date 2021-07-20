@@ -245,11 +245,12 @@ def main():
         draw_geoms()
 
     def on_clear_drawing(event):
+        geoms_text.delete("1.0", tk.END)
         geoms.clear()
 
     def ok():
-        print(geoms)
         root.destroy()
+        print(geoms)
 
     #####
     # GUI
