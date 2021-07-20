@@ -1,13 +1,13 @@
-# OpenStreetMapPy
+# GetOSM
 
-OpenStreetMapPy is an OpenStreetMap downloader written in Python that is
-agnostic of GUI frameworks. It is used with
+GetOSM is an OpenStreetMap downloader written in Python that is agnostic of
+GUI frameworks. It is used with
 [tkinter](https://docs.python.org/3/library/tkinter.html) by
 [ProjPicker](https://github.com/HuidaeCho/projpicker).
 
 ## Requirements
 
-OpenStreetMapPy uses the following standard modules:
+GetOSM uses the following standard modules:
 * [sys](https://docs.python.org/3/library/sys.html)
 * [math](https://docs.python.org/3/library/math.html)
 * [urllib.request](https://docs.python.org/3/library/urllib.request.html)

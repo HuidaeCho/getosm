@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 ################################################################################
-# Project:  OpenStreetMapPy <https://github.com/HuidaeCho/openstreetmappy>
+# Project:  GetOSM <https://github.com/HuidaeCho/getosm>
 # Authors:  Huidae Cho
 # Since:    July 11, 2021
 #
@@ -20,7 +20,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ################################################################################
 """
-This script implements a tkinter demo GUI using OpenStreetMapPy.
+This script implements a tkinter demo GUI using GetOSM.
 """
 
 import sys
@@ -31,16 +31,16 @@ import webbrowser
 
 # https://stackoverflow.com/a/49480246/16079666
 if __package__:
-    from .openstreetmap import OpenStreetMap
+    from .getosm import OpenStreetMap
 else:
-    from openstreetmap import OpenStreetMap
+    from getosm import OpenStreetMap
 
 
 def main():
     tag_map = "map"
     tag_geoms = "geoms"
     tag_github = "github"
-    github_url = "https://github.com/HuidaeCho/openstreetmappy"
+    github_url = "https://github.com/HuidaeCho/getosm"
     zoomer = None
     dragged = False
     drawing_bbox = False

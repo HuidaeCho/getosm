@@ -1,9 +1,9 @@
 #!/bin/sh
 set -e
-rm -rf openstreetmappy* build dist README.md LICENSE setup.py deploy.sh
+rm -rf getosm* build dist README.md LICENSE setup.py deploy.sh
 test "$1" = "clean" && exit
 
-cp -a ../openstreetmappy ../README.md .
+cp -a ../getosm ../README.md .
 cp -a ../COPYING LICENSE
 
 cat<<EOT > setup.py
@@ -12,19 +12,19 @@ import setuptools
 with open("README.md") as f:
     long_description = f.read().rstrip()
 
-with open("openstreetmappy/VERSION") as f:
+with open("getosm/VERSION") as f:
     version = f.read().rstrip()
 
 setuptools.setup(
-    name="openstreetmappy",
+    name="getosm",
     version=version,
     license="GPLv3+",
     author="Huidae Cho",
     author_email="grass4u@gmail.com",
-    description="OpenStreetMapPy is an OpenStreetMap downloader written in Python that is agnostic of GUI frameworks.",
+    description="GetOSM is an OpenStreetMap downloader written in Python that is agnostic of GUI frameworks.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/HuidaeCho/openstreetmappy",
+    url="https://github.com/HuidaeCho/getosm",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -32,7 +32,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3",
-    package_data={"openstreetmappy": ["VERSION"]},
+    package_data={"getosm": ["VERSION"]},
     entry_points={"console_scripts": ["osmtk=osmtk:main", "osmwx=osmwx:main"]},
 )
 EOT

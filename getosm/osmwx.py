@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 ################################################################################
-# Project:  OpenStreetMapPy <https://github.com/HuidaeCho/openstreetmappy>
+# Project:  GetOSM <https://github.com/HuidaeCho/getosm>
 # Authors:  Huidae Cho
 # Since:    July 11, 2021
 #
@@ -20,7 +20,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ################################################################################
 """
-This script implements a wxPython demo GUI using OpenStreetMapPy.
+This script implements a wxPython demo GUI using GetOSM.
 """
 
 import io
@@ -29,9 +29,9 @@ import wx.lib.statbmp
 
 # https://stackoverflow.com/a/49480246/16079666
 if __package__:
-    from .openstreetmap import OpenStreetMap
+    from .getosm import OpenStreetMap
 else:
-    from openstreetmap import OpenStreetMap
+    from getosm import OpenStreetMap
 
 
 def main():

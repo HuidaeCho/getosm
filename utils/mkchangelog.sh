@@ -1,7 +1,7 @@
 #!/bin/sh
 if [ "$1" = "-w" ]; then
 	file=../ChangeLog.md
-	hash='[`%h`](https://github.com/HuidaeCho/openstreetmappy/commit/%h)'
+	hash='[`%h`](https://github.com/HuidaeCho/getosm/commit/%h)'
 else
 	file=/dev/stdout
 	hash='%h'
