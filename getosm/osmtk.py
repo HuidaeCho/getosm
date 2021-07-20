@@ -292,12 +292,12 @@ def main():
     map_canvas.bind("<Double-Button-3>", on_clear_drawing)
     # Linux
     # https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/event-types.html
-    map_canvas.bind("<Button-4>", lambda e: zoom_map(e.x, e.y, 1))
-    map_canvas.bind("<Button-5>", lambda e: zoom_map(e.x, e.y, -1))
+    map_canvas.bind("<Button-4>", lambda e: zoom_map(e.x, e.y, 0.1))
+    map_canvas.bind("<Button-5>", lambda e: zoom_map(e.x, e.y, -0.1))
     # Windows and macOS
     # https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/event-types.html
     map_canvas.bind("<MouseWheel>",
-                    lambda e: zoom_map(e.x, e.y, 1 if e.delta > 0 else -1))
+                    lambda e: zoom_map(e.x, e.y, 0.1 if e.delta > 0 else -0.1))
     map_canvas.bind("<Motion>", on_move)
 
     ####################

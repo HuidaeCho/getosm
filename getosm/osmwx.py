@@ -53,12 +53,11 @@ def main():
         elif event.WheelDelta > 0:
             if zoomer:
                 zoomer.Stop()
-            zoomer = wx.CallLater(0, zoom, event.x, event.y,
-                                  event.WheelRotation / event.WheelDelta)
+            dz = event.WheelRotation / event.WheelDelta * 0.1
+            zoomer = wx.CallLater(0, zoom, event.x, event.y, dz)
 
     app = wx.App()
-    root = wx.Frame(None, title="GetOSM wxPython Demo GUI",
-                    size=(800, 800))
+    root = wx.Frame(None, title="GetOSM wxPython Demo GUI", size=(800, 800))
 
     map_canvas = wx.lib.statbmp.GenStaticBitmap(root, wx.ID_ANY, wx.NullBitmap,
                                                 size=root.Size)
