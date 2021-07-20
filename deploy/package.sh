@@ -33,6 +33,7 @@ setuptools.setup(
     ],
     python_requires=">=3",
     package_data={"openstreetmappy": ["VERSION"]},
+    entry_points={"console_scripts": ["osmtk=osmtk:main", "osmwx=osmwx:main"]},
 )
 EOT
 

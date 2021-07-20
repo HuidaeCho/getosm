@@ -1,6 +1,26 @@
 #!/usr/bin/env python3
+################################################################################
+# Project:  OpenStreetMapPy <https://github.com/HuidaeCho/openstreetmappy>
+# Authors:  Huidae Cho
+# Since:    July 11, 2021
+#
+# Copyright (C) 2021 Huidae Cho <https://idea.isnew.info/>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+################################################################################
 """
-This module implements a tkinter demo GUI using OpenStreetMapPy.
+This script implements a tkinter demo GUI using OpenStreetMapPy.
 """
 
 import sys
@@ -28,6 +48,9 @@ def main():
     prev_xy = []
     curr_geom = []
     geoms = []
+    lat = 0
+    lon = 0
+    zoom = 0
 
     def adjust_lon(prev_x, x, prev_lon, lon):
         dlon = lon - prev_lon
@@ -228,10 +251,6 @@ def main():
         print(geoms)
         root.destroy()
 
-    lat = 0
-    lon = 0
-    zoom = 0
-
     #####
     # GUI
 
@@ -260,10 +279,9 @@ def main():
             lambda data: tk.PhotoImage(data=data),
             lambda image, tile, x, y:
                 map_canvas.create_image(x, y, anchor=tk.NW, image=tile,
-                                        tag=tag_map))
-
-    osm.set_map_size(map_canvas_width, map_canvas_height)
-    osm.draw_map(lat, lon, zoom)
+                                        tag=tag_map),
+            map_canvas_width, map_canvas_height,
+            lat, lon, zoom)
 
     map_canvas.bind("<ButtonPress-1>", lambda e: osm.start_dragging(e.x, e.y))
     map_canvas.bind("<B1-Motion>", on_drag)
