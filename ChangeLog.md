@@ -1,8 +1,15 @@
 # Change log
 
 ## HEAD
-Tue Jul 20 04:09:04 2021 -0400
+Tue Jul 20 19:44:00 2021 -0400
 
+* [`f452b67`](https://github.com/HuidaeCho/getosm/commit/f452b67)  Pass dz to osm.zoom() from outside (better control from GUI code)
+* [`65543bb`](https://github.com/HuidaeCho/getosm/commit/65543bb)  Remove shebang from non-executable py
+
+## v0.1.0.post3
+Tue Jul 20 04:09:17 2021 -0400
+
+* [`4659fbe`](https://github.com/HuidaeCho/getosm/commit/4659fbe)  changelog
 * [`a642fa2`](https://github.com/HuidaeCho/getosm/commit/a642fa2)  v0.1.0.post3
 * [`e057d95`](https://github.com/HuidaeCho/getosm/commit/e057d95)  Add a badge
 * [`d9fffb7`](https://github.com/HuidaeCho/getosm/commit/d9fffb7)  Merge branch 'master' of github.com:HuidaeCho/getosm
