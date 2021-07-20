@@ -36,6 +36,7 @@ else:
 
 def main():
     zoomer = None
+    dzoom = 0.1
     lat = 0
     lon = 0
     zoom = 0
@@ -53,7 +54,7 @@ def main():
         elif event.WheelDelta > 0:
             if zoomer:
                 zoomer.Stop()
-            dz = event.WheelRotation / event.WheelDelta * 0.1
+            dz = event.WheelRotation / event.WheelDelta * dzoom
             zoomer = wx.CallLater(0, zoom, event.x, event.y, dz)
 
     app = wx.App()

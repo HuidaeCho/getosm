@@ -42,6 +42,7 @@ def main():
     tag_github = "github"
     github_url = "https://github.com/HuidaeCho/getosm"
     zoomer = None
+    dzoom = 0.1
     dragged = False
     drawing_bbox = False
     complete_drawing = False
@@ -133,7 +134,6 @@ def main():
             g += 1
 
     def zoom_map(x, y, dz):
-
         def zoom(x, y, dz):
             if osm.zoom(x, y, dz):
                 draw_geoms(x, y)
@@ -292,12 +292,13 @@ def main():
     map_canvas.bind("<Double-Button-3>", on_clear_drawing)
     # Linux
     # https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/event-types.html
-    map_canvas.bind("<Button-4>", lambda e: zoom_map(e.x, e.y, 0.1))
-    map_canvas.bind("<Button-5>", lambda e: zoom_map(e.x, e.y, -0.1))
+    map_canvas.bind("<Button-4>", lambda e: zoom_map(e.x, e.y, dzoom))
+    map_canvas.bind("<Button-5>", lambda e: zoom_map(e.x, e.y, -dzoom))
     # Windows and macOS
     # https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/event-types.html
     map_canvas.bind("<MouseWheel>",
-                    lambda e: zoom_map(e.x, e.y, 0.1 if e.delta > 0 else -0.1))
+                    lambda e: zoom_map(e.x, e.y,
+                                       dzoom if e.delta > 0 else -dzoom))
     map_canvas.bind("<Motion>", on_move)
 
     ####################
