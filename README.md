@@ -12,6 +12,16 @@ GetOSM uses the following standard modules:
 * [math](https://docs.python.org/3/library/math.html)
 * [urllib.request](https://docs.python.org/3/library/urllib.request.html)
 
+## Demo GUIs
+
+### osmtk: tkinter demo
+
+![image](https://user-images.githubusercontent.com/7456117/126282231-34260f42-316d-4da9-9f0a-b95832f48d85.png)
+
+### osmwx: wxPython demo
+
+Only map viewing is implemented.
+
 ## License
 
 Copyright (C) 2021 [Huidae Cho](https://idea.isnew.info/)
