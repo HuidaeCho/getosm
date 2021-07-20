@@ -33,7 +33,10 @@ setuptools.setup(
     ],
     python_requires=">=3",
     package_data={"getosm": ["VERSION"]},
-    entry_points={"console_scripts": ["osmtk=osmtk:main", "osmwx=osmwx:main"]},
+    entry_points={"console_scripts": [
+        "osmtk=getosm.osmtk:main",
+        "osmwx=getosm.osmwx:main"
+    ]},
 )
 EOT
 
