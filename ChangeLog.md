@@ -1,8 +1,14 @@
 # Change log
 
 ## HEAD
-Tue Jul 20 03:36:11 2021 -0400
+Tue Jul 20 03:40:44 2021 -0400
 
+* [`02330cd`](https://github.com/HuidaeCho/getosm/commit/02330cd)  Clear textbox on clearing geoms
+
+## v0.1.0.post1
+Tue Jul 20 03:36:20 2021 -0400
+
+* [`42f8a5a`](https://github.com/HuidaeCho/getosm/commit/42f8a5a)  Readonly geometries tab
 * [`ec42bd7`](https://github.com/HuidaeCho/getosm/commit/ec42bd7)  Readonly geometries tab
 
 ## v0.1.0
