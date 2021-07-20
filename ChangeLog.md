@@ -1,8 +1,14 @@
 # Change log
 
 ## HEAD
-Tue Jul 20 19:44:00 2021 -0400
+Tue Jul 20 19:52:44 2021 -0400
 
+* [`c0b72a3`](https://github.com/HuidaeCho/getosm/commit/c0b72a3)  Add dzoom
+
+## v0.1.0.post4
+Tue Jul 20 19:44:42 2021 -0400
+
+* [`f719208`](https://github.com/HuidaeCho/getosm/commit/f719208)  changelog
 * [`f452b67`](https://github.com/HuidaeCho/getosm/commit/f452b67)  Pass dz to osm.zoom() from outside (better control from GUI code)
 * [`65543bb`](https://github.com/HuidaeCho/getosm/commit/65543bb)  Remove shebang from non-executable py
 
