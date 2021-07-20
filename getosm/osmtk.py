@@ -319,6 +319,7 @@ def main():
 
     # text for geoms
     geoms_text = tk.Text(geoms_top_frame, width=20, height=1, wrap=tk.NONE)
+    geoms_text.bind("<Key>", lambda e: "break" if e.state == 0 else None)
     geoms_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
     # vertical scroll bar for geoms
