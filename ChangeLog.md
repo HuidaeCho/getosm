@@ -1,8 +1,18 @@
 # Change log
 
 ## HEAD
-Tue Jul 20 03:40:44 2021 -0400
+Tue Jul 20 04:09:04 2021 -0400
 
+* [`a642fa2`](https://github.com/HuidaeCho/getosm/commit/a642fa2)  v0.1.0.post3
+* [`e057d95`](https://github.com/HuidaeCho/getosm/commit/e057d95)  Add a badge
+* [`d9fffb7`](https://github.com/HuidaeCho/getosm/commit/d9fffb7)  Merge branch 'master' of github.com:HuidaeCho/getosm
+* [`a40ba5d`](https://github.com/HuidaeCho/getosm/commit/a40ba5d)  Correct titles in demo GUIs
+* [`6064666`](https://github.com/HuidaeCho/getosm/commit/6064666)  Add tkinter demo screenshot
+
+## v0.1.0.post2
+Tue Jul 20 03:42:56 2021 -0400
+
+* [`32222fa`](https://github.com/HuidaeCho/getosm/commit/32222fa)  Clear textbox on clearing geoms
 * [`02330cd`](https://github.com/HuidaeCho/getosm/commit/02330cd)  Clear textbox on clearing geoms
 
 ## v0.1.0.post1
