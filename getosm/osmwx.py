@@ -48,7 +48,7 @@ def main():
         nonlocal zoomer
 
         if event.ButtonDown(wx.MOUSE_BTN_LEFT):
-            osm.start_dragging(event.x, event.y)
+            osm.grab(event.x, event.y)
         elif event.Dragging():
             osm.drag(event.x, event.y)
         elif event.WheelDelta > 0:
