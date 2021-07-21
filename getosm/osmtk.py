@@ -42,7 +42,7 @@ def main():
     tag_github = "github"
     github_url = "https://github.com/HuidaeCho/getosm"
     zoomer = None
-    dzoom = 0.1
+    dzoom = 1
     dragged = False
     drawing_bbox = False
     complete_drawing = False

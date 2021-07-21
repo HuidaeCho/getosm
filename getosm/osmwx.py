@@ -36,7 +36,7 @@ else:
 
 def main():
     zoomer = None
-    dzoom = 0.1
+    dzoom = 1
     lat = 0
     lon = 0
     zoom = 0
