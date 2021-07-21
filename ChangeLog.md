@@ -1,8 +1,11 @@
 # Change log
 
 ## HEAD
-Wed Jul 21 01:02:33 2021 -0400
+Wed Jul 21 01:05:10 2021 -0400
 
+* [`14f7884`](https://github.com/HuidaeCho/getosm/commit/14f7884)  dzoom = 1
+* [`fe4438b`](https://github.com/HuidaeCho/getosm/commit/fe4438b)  v0.1.0.post6
+* [`4ce89b5`](https://github.com/HuidaeCho/getosm/commit/4ce89b5)  changelog
 * [`a6a0b64`](https://github.com/HuidaeCho/getosm/commit/a6a0b64)  Improve zoom\_to\_bbox()
 
 ## v0.1.0.post5
