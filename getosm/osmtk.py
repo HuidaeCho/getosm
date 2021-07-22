@@ -44,7 +44,6 @@ def main():
     tag_github = "github"
     github_url = "https://github.com/HuidaeCho/getosm"
     zoomer = None
-    zoomer_checker = None
     zoomer_queue = queue.Queue()
     dzoom = 1
     dragged = False
@@ -58,7 +57,7 @@ def main():
     zoom = 0
 
     def draw_map(x, y):
-        osm.draw_map()
+        osm.draw()
         draw_geoms(x, y)
 
     def draw_geoms(x=None, y=None):
@@ -148,23 +147,23 @@ def main():
                 zoomer_queue.put((draw_map, x, y))
 
         def check_zoomer():
-            nonlocal zoomer_checker
+            nonlocal zoomer
 
             try:
-                map_draw, x, y = zoomer_queue.get_nowait()
+                draw_map, x, y = zoomer_queue.get_nowait()
             except:
-                zoomer_checker = map_canvas.after_idle(check_zoomer)
+                zoomer.checker = map_canvas.after_idle(check_zoomer)
             else:
-                map_draw(x, y)
+                draw_map(x, y)
 
-        nonlocal zoomer, zoomer_checker
+        nonlocal zoomer
 
         if zoomer:
             zoomer.cancel_event.set()
             osm.cancel = True
             zoomer.join()
             osm.cancel = False
-            map_canvas.after_cancel(zoomer_checker)
+            map_canvas.after_cancel(zoomer.checker)
 
             cancel_event = zoomer.cancel_event
             cancel_event.clear()
@@ -173,8 +172,8 @@ def main():
 
         zoomer = threading.Thread(target=zoom, args=(x, y, dz, cancel_event))
         zoomer.cancel_event = cancel_event
+        zoomer.checker = map_canvas.after_idle(check_zoomer)
         zoomer.start()
-        zoomer_checker = map_canvas.after_idle(check_zoomer)
 
     def on_drag(event):
         nonlocal dragged

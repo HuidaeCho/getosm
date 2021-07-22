@@ -49,7 +49,7 @@ def main():
         def zoom(x, y, dz, cancel_event):
             if (not cancel_event.wait(0.01) and
                 osm.zoom(x, y, dz, False) and not osm.cancel):
-                zoomer_queue.put(osm.draw_map)
+                zoomer_queue.put(osm.draw)
 
         def check_zoomer():
             nonlocal zoomer_checker
@@ -94,7 +94,7 @@ def main():
     map_canvas = wx.lib.statbmp.GenStaticBitmap(root, wx.ID_ANY, wx.NullBitmap,
                                                 size=root.Size)
     map_canvas.Bind(wx.EVT_MOUSE_EVENTS, on_mouse)
-    map_canvas.Bind(wx.EVT_SIZE, lambda e: osm.resize_map(e.Size.Width,
+    map_canvas.Bind(wx.EVT_SIZE, lambda e: osm.resize(e.Size.Width,
                                                           e.Size.Height))
 
     osm = OpenStreetMap(
