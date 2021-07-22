@@ -26,6 +26,8 @@ This script implements a wxPython demo GUI using GetOSM.
 import io
 import sys
 import wx.lib.statbmp
+import threading
+import queue
 
 # https://stackoverflow.com/a/49480246/16079666
 if __package__:
@@ -36,16 +38,30 @@ else:
 
 def main():
     zoomer = None
+    zoomer_checker = None
+    zoomer_queue = queue.Queue()
     dzoom = 1
     lat = 0
     lon = 0
     zoom = 0
 
     def on_mouse(event):
-        def zoom(x, y, dz):
-            osm.zoom(x, y, dz)
+        def zoom(x, y, dz, cancel_event):
+            if (not cancel_event.wait(0.01) and
+                osm.zoom(x, y, dz, False) and not osm.cancel):
+                zoomer_queue.put(osm.draw_map)
 
-        nonlocal zoomer
+        def check_zoomer():
+            nonlocal zoomer_checker
+
+            try:
+                map_drawer = zoomer_queue.get_nowait()
+            except:
+                zoomer_checker = wx.CallLater(0, check_zoomer)
+            else:
+                map_drawer()
+
+        nonlocal zoomer, zoomer_checker
 
         if event.ButtonDown(wx.MOUSE_BTN_LEFT):
             osm.grab(event.x, event.y)
@@ -53,9 +69,24 @@ def main():
             osm.drag(event.x, event.y)
         elif event.WheelDelta > 0:
             if zoomer:
-                zoomer.Stop()
+                zoomer.cancel_event.set()
+                osm.cancel = True
+                zoomer.join()
+                osm.cancel = False
+                zoomer_checker.Stop()
+
+                cancel_event = zoomer.cancel_event
+                cancel_event.clear()
+            else:
+                cancel_event = threading.Event()
+
             dz = event.WheelRotation / event.WheelDelta * dzoom
-            zoomer = wx.CallLater(0, zoom, event.x, event.y, dz)
+
+            zoomer = threading.Thread(target=zoom, args=(event.x, event.y, dz,
+                                                         cancel_event))
+            zoomer.cancel_event = cancel_event
+            zoomer.start()
+            zoomer_checker = wx.CallLater(0, check_zoomer)
 
     app = wx.App()
     root = wx.Frame(None, title="GetOSM wxPython Demo GUI", size=(800, 800))

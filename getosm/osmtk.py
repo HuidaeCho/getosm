@@ -26,6 +26,8 @@ This script implements a tkinter demo GUI using GetOSM.
 import sys
 import tkinter as tk
 from tkinter import ttk
+import threading
+import queue
 import textwrap
 import webbrowser
 
@@ -42,6 +44,8 @@ def main():
     tag_github = "github"
     github_url = "https://github.com/HuidaeCho/getosm"
     zoomer = None
+    zoomer_checker = None
+    zoomer_queue = queue.Queue()
     dzoom = 1
     dragged = False
     drawing_bbox = False
@@ -53,18 +57,9 @@ def main():
     lon = 0
     zoom = 0
 
-    def adjust_lon(prev_x, x, prev_lon, lon):
-        dlon = lon - prev_lon
-        if x - prev_x > 0:
-            if dlon < 0:
-                lon += 360
-            elif dlon > 360:
-                lon -= 360
-        elif dlon > 0:
-            lon -= 360
-        elif dlon < -360:
-            lon += 360
-        return lon
+    def draw_map(x, y):
+        osm.draw_map()
+        draw_geoms(x, y)
 
     def draw_geoms(x=None, y=None):
         point_size = 4
@@ -133,16 +128,53 @@ def main():
                                                     tag=tag_geoms)
             g += 1
 
-    def zoom_map(x, y, dz):
-        def zoom(x, y, dz):
-            if osm.zoom(x, y, dz):
-                draw_geoms(x, y)
+    def adjust_lon(prev_x, x, prev_lon, lon):
+        dlon = lon - prev_lon
+        if x - prev_x > 0:
+            if dlon < 0:
+                lon += 360
+            elif dlon > 360:
+                lon -= 360
+        elif dlon > 0:
+            lon -= 360
+        elif dlon < -360:
+            lon += 360
+        return lon
 
-        nonlocal zoomer
+    def zoom_map(x, y, dz):
+        def zoom(x, y, dz, cancel_event):
+            if (not cancel_event.wait(0.01) and
+                osm.zoom(x, y, dz, False) and not osm.cancel):
+                zoomer_queue.put((draw_map, x, y))
+
+        def check_zoomer():
+            nonlocal zoomer_checker
+
+            try:
+                map_draw, x, y = zoomer_queue.get_nowait()
+            except:
+                zoomer_checker = map_canvas.after_idle(check_zoomer)
+            else:
+                map_draw(x, y)
+
+        nonlocal zoomer, zoomer_checker
 
         if zoomer:
-            map_canvas.after_cancel(zoomer)
-        zoomer = map_canvas.after(0, zoom, x, y, dz)
+            zoomer.cancel_event.set()
+            osm.cancel = True
+            zoomer.join()
+            osm.cancel = False
+            map_canvas.after_cancel(zoomer_checker)
+
+            cancel_event = zoomer.cancel_event
+            cancel_event.clear()
+        else:
+            cancel_event = threading.Event()
+
+        zoomer = threading.Thread(target=zoom, args=(x, y, dz, cancel_event))
+        zoomer.cancel_event = cancel_event
+        zoomer.start()
+        zoomer_checker = map_canvas.after_idle(check_zoomer)
 
     def on_drag(event):
         nonlocal dragged
