@@ -38,30 +38,29 @@ else:
 
 def main():
     zoomer = None
-    zoomer_checker = None
     zoomer_queue = queue.Queue()
-    dzoom = 1
+    dzoom = 0.1
+
     lat = 0
     lon = 0
     zoom = 0
 
     def on_mouse(event):
         def zoom(x, y, dz, cancel_event):
-            if (not cancel_event.wait(0.01) and
-                osm.zoom(x, y, dz, False) and not osm.cancel):
+            if not cancel_event.wait(0.01) and osm.redownload():
                 zoomer_queue.put(osm.draw)
 
         def check_zoomer():
-            nonlocal zoomer_checker
+            nonlocal zoomer
 
             try:
-                map_drawer = zoomer_queue.get_nowait()
+                draw_map = zoomer_queue.get_nowait()
             except:
-                zoomer_checker = wx.CallLater(0, check_zoomer)
+                zoomer.checker = wx.CallLater(0, check_zoomer)
             else:
-                map_drawer()
+                draw_map()
 
-        nonlocal zoomer, zoomer_checker
+        nonlocal zoomer
 
         if event.ButtonDown(wx.MOUSE_BTN_LEFT):
             osm.grab(event.x, event.y)
@@ -73,7 +72,7 @@ def main():
                 osm.cancel = True
                 zoomer.join()
                 osm.cancel = False
-                zoomer_checker.Stop()
+                zoomer.checker.Stop()
 
                 cancel_event = zoomer.cancel_event
                 cancel_event.clear()
@@ -82,11 +81,14 @@ def main():
 
             dz = event.WheelRotation / event.WheelDelta * dzoom
 
+            # if used without osm.draw(), it works; otherwise, only osm.draw()
+            # is visible; timing?
+            osm.rescale(event.x, event.y, dz)
             zoomer = threading.Thread(target=zoom, args=(event.x, event.y, dz,
                                                          cancel_event))
             zoomer.cancel_event = cancel_event
+            zoomer.checker = wx.CallLater(0, check_zoomer)
             zoomer.start()
-            zoomer_checker = wx.CallLater(0, check_zoomer)
 
     app = wx.App()
     root = wx.Frame(None, title="GetOSM wxPython Demo GUI", size=(800, 800))
@@ -102,6 +104,7 @@ def main():
             lambda image: map_canvas.SetBitmap(wx.Bitmap(image)),
             lambda data: wx.Image(io.BytesIO(data)),
             lambda image, tile, x, y: image.Paste(tile, x, y),
+            lambda tile, dz: tile.Scale(tile.Width*2**dz, tile.Height*2**dz),
             map_canvas.Size.Width, map_canvas.Size.Height,
             lat, lon, zoom)
 

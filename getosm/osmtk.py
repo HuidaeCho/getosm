@@ -45,13 +45,14 @@ def main():
     github_url = "https://github.com/HuidaeCho/getosm"
     zoomer = None
     zoomer_queue = queue.Queue()
-    dzoom = 1
+    dzoom = 0.1
     dragged = False
     drawing_bbox = False
     complete_drawing = False
     prev_xy = []
     curr_geom = []
     geoms = []
+
     lat = 0
     lon = 0
     zoom = 0
@@ -142,8 +143,7 @@ def main():
 
     def zoom_map(x, y, dz):
         def zoom(x, y, dz, cancel_event):
-            if (not cancel_event.wait(0.01) and
-                osm.zoom(x, y, dz, False) and not osm.cancel):
+            if not cancel_event.wait(0.01) and osm.redownload():
                 zoomer_queue.put((draw_map, x, y))
 
         def check_zoomer():
@@ -170,6 +170,7 @@ def main():
         else:
             cancel_event = threading.Event()
 
+        osm.rescale(x, y, dz)
         zoomer = threading.Thread(target=zoom, args=(x, y, dz, cancel_event))
         zoomer.cancel_event = cancel_event
         zoomer.checker = map_canvas.after_idle(check_zoomer)
@@ -312,6 +313,8 @@ def main():
             lambda image, tile, x, y:
                 map_canvas.create_image(x, y, anchor=tk.NW, image=tile,
                                         tag=tag_map),
+            lambda tile, dz: tile.zoom(2**abs(dz)) if dz > 0 else
+                             tile.subsample(2**abs(dz)),
             map_canvas_width, map_canvas_height,
             lat, lon, zoom)
 
