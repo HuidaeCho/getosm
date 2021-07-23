@@ -1,8 +1,16 @@
 # Change log
 
 ## HEAD
-Thu Jul 22 20:03:37 2021 -0400
+Fri Jul 23 03:12:29 2021 -0400
 
+* [`bed0dcf`](https://github.com/HuidaeCho/getosm/commit/bed0dcf)  Support multiple delta zoom levels
+* [`517b796`](https://github.com/HuidaeCho/getosm/commit/517b796)  Minor refactoring
+* [`d15b0b7`](https://github.com/HuidaeCho/getosm/commit/d15b0b7)  Remove unused collections import
+
+## v0.1.1
+Thu Jul 22 20:06:44 2021 -0400
+
+* [`c12634b`](https://github.com/HuidaeCho/getosm/commit/c12634b)  v0.1.1: Rescaling tiles
 * [`dbb17d3`](https://github.com/HuidaeCho/getosm/commit/dbb17d3)  Complete rescaling
 * [`1e3e2ba`](https://github.com/HuidaeCho/getosm/commit/1e3e2ba)  Fix rescaling
 * [`2a82d92`](https://github.com/HuidaeCho/getosm/commit/2a82d92)  Crop on rescaling
