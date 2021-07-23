@@ -41,12 +41,15 @@ else:
 def main():
     tag_map = "map"
     tag_geoms = "geoms"
+    tag_dragged_bbox = "dragged_bbox"
     tag_github = "github"
     github_url = "https://github.com/HuidaeCho/getosm"
     zoomer = None
     zoomer_queue = queue.Queue()
     dzoom = 0.1
     dragged = False
+    dragging_bbox = False
+    dragged_bbox = []
     drawing_bbox = False
     complete_drawing = False
     prev_xy = []
@@ -66,7 +69,7 @@ def main():
         point_half_size = point_size // 2
         outline = "blue"
         width = 2
-        fill = "blue"
+        fill = outline
         stipple = "gray12"
 
         map_canvas.delete(tag_geoms)
@@ -81,10 +84,14 @@ def main():
             if drawing_bbox:
                 ng = len(g)
                 if ng > 0:
-                    s = g[ng-1][0]
-                    n = g[0][0]
+                    s = min(g[0][0], g[ng-1][0])
+                    n = max(g[0][0], g[ng-1][0])
                     w = g[0][1]
                     e = g[ng-1][1]
+                    if s == n:
+                        n += 0.0001
+                    if w == e:
+                        e += 0.0001
                     all_geoms.extend(["bbox", [s, n, w, e]])
             elif g:
                 if prev_xy:
@@ -141,7 +148,74 @@ def main():
             lon += 360
         return lon
 
-    def zoom_map(x, y, dz):
+    def calc_geoms_bbox():
+        s = n = w = e = None
+        geom_type = "point"
+        g = 0
+        ngeoms = len(geoms)
+        while g < ngeoms:
+            geom = geoms[g]
+            if geom in ("point", "poly", "bbox"):
+                geom_type = geom
+                g += 1
+                geom = geoms[g]
+            if type(geom) == list:
+                if geom_type == "point":
+                    lat, lon = geom
+                    if s is None:
+                        s = n = lat
+                        w = e = lon
+                    else:
+                        if lat < s:
+                            s = lat
+                        elif lat > n:
+                            n = lat
+                        if lon < w:
+                            w = lon
+                        elif lon > e:
+                            e = lon
+                elif geom_type == "poly":
+                    for coor in geom:
+                        lat, lon = coor
+                        if s is None:
+                            s = n = lat
+                            w = e = lon
+                        else:
+                            if lat < s:
+                                s = lat
+                            elif lat > n:
+                                n = lat
+                            if lon < w:
+                                w = lon
+                            elif lon > e:
+                                e = lon
+                else:
+                    b, t, l, r = geom
+                    if s is None:
+                        s = b
+                        n = t
+                        w = l
+                        e = r
+                    else:
+                        if b < s:
+                            s = b
+                        if t > n:
+                            n = t
+                        if l < w:
+                            w = l
+                        if r > e:
+                            e = r
+            g += 1
+        if None not in (s, n, w, e):
+            if s == n:
+                s -= 0.0001
+                n += 0.0001
+            if w == e:
+                w -= 0.0001
+                e += 0.0001
+        return s, n, w, e
+
+    def zoom_map(x, y, dz, state):
         def zoom(x, y, dz, cancel_event):
             if not cancel_event.wait(0.01) and osm.redownload():
                 zoomer_queue.put((draw_map, x, y))
@@ -157,6 +231,17 @@ def main():
                 draw_map(x, y)
 
         nonlocal zoomer
+
+        if state & 0x4:
+            # Control + MouseWheel
+            if dz > 0:
+                geoms_bbox = calc_geoms_bbox()
+                if None not in geoms_bbox:
+                    osm.zoom_to_bbox(geoms_bbox, False)
+            else:
+                osm.zoom(x, y, osm.z_min - osm.z, False)
+            draw_map(x, y)
+            return
 
         if zoomer:
             zoomer.cancel_event.set()
@@ -177,10 +262,39 @@ def main():
         zoomer.start()
 
     def on_drag(event):
-        nonlocal dragged
+        nonlocal dragged, dragging_bbox, dragged_bbox
 
-        osm.drag(event.x, event.y)
-        draw_geoms(event.x, event.y)
+        if event.state & 0x4:
+            # Control + B1-Motion
+            outline = "green"
+            width = 2
+            fill = outline
+            stipple = "gray12"
+
+            latlon = osm.canvas_to_latlon(event.x, event.y)
+            if not dragging_bbox:
+                dragging_bbox = True
+                dragged_bbox.append(latlon)
+            else:
+                if len(dragged_bbox) == 2:
+                    del dragged_bbox[1]
+                dragged_bbox.append(latlon)
+
+                ng = len(dragged_bbox)
+                s = dragged_bbox[ng-1][0]
+                n = dragged_bbox[0][0]
+                w = dragged_bbox[0][1]
+                e = dragged_bbox[ng-1][1]
+
+                map_canvas.delete(tag_dragged_bbox)
+                for xy in osm.get_bbox_xy((s, n, w, e)):
+                    map_canvas.create_rectangle(xy, outline=outline,
+                                                width=width, fill=fill,
+                                                stipple=stipple,
+                                                tag=tag_dragged_bbox)
+        else:
+            osm.drag(event.x, event.y, False)
+            draw_map(event.x, event.y)
         dragged = True
 
     def on_move(event):
@@ -189,15 +303,31 @@ def main():
         draw_geoms(event.x, event.y)
 
     def on_draw(event):
-        nonlocal dragged, drawing_bbox, complete_drawing
+        nonlocal dragged, dragging_bbox, dragged_bbox, drawing_bbox
+        nonlocal complete_drawing
 
-        if complete_drawing:
+        if dragging_bbox:
+            ng = len(dragged_bbox)
+            s = min(dragged_bbox[0][0], dragged_bbox[ng-1][0])
+            n = max(dragged_bbox[0][0], dragged_bbox[ng-1][0])
+            w = dragged_bbox[0][1]
+            e = dragged_bbox[ng-1][1]
+            if s == n:
+                n += 0.0001
+            if w == e:
+                e += 0.0001
+            osm.zoom_to_bbox([s, n, w, e], False)
+            dragged_bbox.clear()
+            dragging_bbox = False
+            map_canvas.delete(tag_dragged_bbox)
+            draw_map(event.x, event.y)
+        elif complete_drawing:
             geoms_string = ""
             geom = []
             if drawing_bbox:
                 if len(curr_geom) == 2:
-                    s = curr_geom[1][0]
-                    n = curr_geom[0][0]
+                    s = min(curr_geom[0][0], curr_geom[1][0])
+                    n = max(curr_geom[0][0], curr_geom[1][0])
                     w = curr_geom[0][1]
                     e = curr_geom[1][1]
                     geom.extend(["bbox", [s, n, w, e]])
@@ -322,13 +452,15 @@ def main():
     map_canvas.bind("<B1-Motion>", on_drag)
     # Linux
     # https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/event-types.html
-    map_canvas.bind("<Button-4>", lambda e: zoom_map(e.x, e.y, dzoom))
-    map_canvas.bind("<Button-5>", lambda e: zoom_map(e.x, e.y, -dzoom))
+    map_canvas.bind("<Button-4>", lambda e: zoom_map(e.x, e.y, dzoom, e.state))
+    map_canvas.bind("<Button-5>", lambda e: zoom_map(e.x, e.y, -dzoom,
+                                                     e.state))
     # Windows and macOS
     # https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/event-types.html
     map_canvas.bind("<MouseWheel>",
                     lambda e: zoom_map(e.x, e.y,
-                                       dzoom if e.delta > 0 else -dzoom))
+                                       dzoom if e.delta > 0 else -dzoom,
+                                       e.state))
     map_canvas.bind("<Motion>", on_move)
     map_canvas.bind("<ButtonRelease-1>", on_draw)
     map_canvas.bind("<Double-Button-1>", on_complete_drawing)
@@ -387,13 +519,16 @@ def main():
     help_text.insert(tk.END, textwrap.dedent(f"""\
             Map operations
             ==============
-            Pan:                        Drag using left button
+            Pan:                        Left drag
             Zoom:                       Scroll
-            Draw point:                 Double left click
-            Start drawing poly:         Left click
-            Start drawing bbox:         Control + left click
-            Complete drawing poly/bbox: Double left click
-            Cancel drawing poly/bbox:   Right click
+            Zoom to geometries:         Ctrl + scroll up
+            Zoom to the world:          Ctrl + scroll down
+            Draw/zoom to a bbox:        Ctrl + left drag
+            Draw a point:               Double left click
+            Start drawing a poly:       Left click
+            Start drawing a bbox:       Ctrl + left click
+            Complete a poly/bbox:       Double left click
+            Cancel drawing a poly/bbox: Right click
             Clear geometries:           Double right click
 
             GitHub repository
