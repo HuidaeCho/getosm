@@ -1,8 +1,20 @@
 # Change log
 
 ## HEAD
-Wed Jul 21 01:05:10 2021 -0400
+Thu Jul 22 20:03:37 2021 -0400
 
+* [`dbb17d3`](https://github.com/HuidaeCho/getosm/commit/dbb17d3)  Complete rescaling
+* [`1e3e2ba`](https://github.com/HuidaeCho/getosm/commit/1e3e2ba)  Fix rescaling
+* [`2a82d92`](https://github.com/HuidaeCho/getosm/commit/2a82d92)  Crop on rescaling
+* [`02b8061`](https://github.com/HuidaeCho/getosm/commit/02b8061)  Add experimental code for tile rescaling
+* [`09202bd`](https://github.com/HuidaeCho/getosm/commit/09202bd)  Multithreaded downloading
+* [`792ac68`](https://github.com/HuidaeCho/getosm/commit/792ac68)  Rename start\_dragging() to grab()
+* [`bc8b7cc`](https://github.com/HuidaeCho/getosm/commit/bc8b7cc)  Rename start\_dragging() to grab()
+
+## v0.1.0.post6
+Wed Jul 21 01:05:26 2021 -0400
+
+* [`0a3dbf8`](https://github.com/HuidaeCho/getosm/commit/0a3dbf8)  changelog
 * [`14f7884`](https://github.com/HuidaeCho/getosm/commit/14f7884)  dzoom = 1
 * [`fe4438b`](https://github.com/HuidaeCho/getosm/commit/fe4438b)  v0.1.0.post6
 * [`4ce89b5`](https://github.com/HuidaeCho/getosm/commit/4ce89b5)  changelog
