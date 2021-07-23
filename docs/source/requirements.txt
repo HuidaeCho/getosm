@@ -2,5 +2,5 @@
 git+https://github.com/ocsmit/sphinx-argparse.git@master
 # Fix external links in the sidebar
 git+https://github.com/HuidaeCho/sphinx_press_theme.git@projpicker
-#sphinx_rtd_theme
+sphinx_rtd_theme
 six
