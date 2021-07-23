@@ -9,7 +9,7 @@ GUI frameworks. It is used with
 
 ## Requirements
 
-GetOSM uses the following standard modules:
+GetOSM uses the following standard Python modules:
 * [sys](https://docs.python.org/3/library/sys.html)
 * [math](https://docs.python.org/3/library/math.html)
 * [urllib.request](https://docs.python.org/3/library/urllib.request.html)
