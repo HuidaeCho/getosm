@@ -467,7 +467,7 @@ def main():
     map_canvas.bind("<ButtonRelease-3>", on_cancel_drawing)
     map_canvas.bind("<Double-Button-3>", on_clear_drawing)
 
-    ####################
+    ##############
     # bottom frame
     notebook_width = root_width
     notebook = ttk.Notebook(root, width=notebook_width)
