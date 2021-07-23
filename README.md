@@ -22,7 +22,7 @@ GetOSM uses the following standard modules:
 
 ### osmwx: wxPython demo
 
-Only map viewing is implemented.
+Map viewing is implemented.
 
 ## License
 
