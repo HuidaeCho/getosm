@@ -1,6 +1,7 @@
 # GetOSM
 
 [![PyPI version](https://badge.fury.io/py/getosm.svg)](https://badge.fury.io/py/getosm)
+[![Documentation Status](https://readthedocs.org/projects/getosm/badge/?version=latest)](https://getosm.readthedocs.io/en/latest/?badge=latest)
 
 GetOSM is an OpenStreetMap downloader written in Python that is agnostic of
 GUI frameworks. It is used with
