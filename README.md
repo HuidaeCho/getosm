@@ -15,6 +15,12 @@ GetOSM uses the following standard Python modules:
 * [math](https://docs.python.org/3/library/math.html)
 * [urllib.request](https://docs.python.org/3/library/urllib.request.html)
 
+## Installation
+
+```bash
+pip install getosm
+```
+
 ## Demo GUIs
 
 ### osmtk: tkinter demo
