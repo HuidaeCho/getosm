@@ -104,7 +104,7 @@ def main():
                                                 size=root.Size)
     map_canvas.Bind(wx.EVT_MOUSE_EVENTS, on_mouse)
     map_canvas.Bind(wx.EVT_SIZE, lambda e: osm.resize(e.Size.Width,
-                                                          e.Size.Height))
+                                                      e.Size.Height))
 
     osm = OpenStreetMap(
             wx.Image,
