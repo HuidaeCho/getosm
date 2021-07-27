@@ -90,8 +90,15 @@ def main():
             zoomer.checker = wx.CallLater(0, check_zoomer)
             zoomer.start()
 
+    #####
+    # GUI
+
+    # root window
     app = wx.App()
-    root = wx.Frame(None, title="GetOSM wxPython Demo GUI", size=(800, 800))
+    root_width = 800
+    root_height = root_width
+    root_size = (root_width, root_height)
+    root = wx.Frame(None, title="GetOSM wxPython Demo GUI", size=root_size)
 
     map_canvas = wx.lib.statbmp.GenStaticBitmap(root, wx.ID_ANY, wx.NullBitmap,
                                                 size=root.Size)
@@ -108,6 +115,8 @@ def main():
             map_canvas.Size.Width, map_canvas.Size.Height,
             lat, lon, zoom)
 
+    #########
+    # run GUI
     root.Show()
     app.MainLoop()
 
