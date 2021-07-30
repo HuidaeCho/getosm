@@ -41,9 +41,6 @@ else:
 def main():
     github_url = "https://github.com/HuidaeCho/getosm"
 
-    tag_geoms = "geoms"
-    tag_dragged_bbox = "dragged_bbox"
-
     zoomer = None
     zoomer_queue = queue.Queue()
     dzoom = 0.1
