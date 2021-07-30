@@ -96,6 +96,11 @@ def main():
             zoomer.checker = wx.CallLater(0, check_zoomer)
             zoomer.start()
 
+    def on_paint(event):
+        map_canvas.OnPaint(event)
+        dc = wx.PaintDC(map_canvas)
+
+
     #####
     # GUI
 
@@ -118,6 +123,7 @@ def main():
     map_canvas.Bind(wx.EVT_MOUSE_EVENTS, on_mouse)
     map_canvas.Bind(wx.EVT_SIZE, lambda e: osm.resize(e.Size.Width,
                                                       e.Size.Height))
+    map_canvas.Bind(wx.EVT_PAINT, on_paint)
     main_box.Add(map_canvas)
 
     osm = OpenStreetMap(
@@ -131,7 +137,7 @@ def main():
 
     #######################
     # label for coordinates
-    coor_label = wx.StaticText(root, label="TODO")
+    coor_label = wx.StaticText(root)
     main_box.Add(coor_label, 0, wx.ALIGN_RIGHT)
 
     ##############
