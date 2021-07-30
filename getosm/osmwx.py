@@ -466,7 +466,7 @@ def main():
     geoms_box = wx.BoxSizer(wx.VERTICAL)
 
     # text for geoms
-    geoms_text = wx.TextCtrl(geoms_panel, style=wx.TE_MULTILINE,
+    geoms_text = wx.TextCtrl(geoms_panel, style=wx.TE_MULTILINE | wx.HSCROLL,
                              size=(notebook_width, notebook_height - 75))
     # https://dzone.com/articles/wxpython-learning-use-fonts
     geoms_text.SetFont(wx.Font(10, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL,
