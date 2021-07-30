@@ -29,7 +29,7 @@ pip install getosm
 
 ### osmwx: wxPython demo
 
-Map viewing is implemented.
+![image](https://user-images.githubusercontent.com/7456117/127703838-85809b56-d081-4db1-9184-d3d2673d1c63.png)
 
 ## License
 
