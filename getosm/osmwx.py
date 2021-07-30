@@ -409,7 +409,6 @@ def main():
         root.Close()
         print(geoms)
 
-
     #####
     # GUI
 
