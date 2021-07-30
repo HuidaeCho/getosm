@@ -23,9 +23,9 @@
 This script implements a wxPython demo GUI using GetOSM.
 """
 
-import io
 import sys
 import wx.lib.statbmp
+import io
 import threading
 import queue
 import textwrap
