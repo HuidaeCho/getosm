@@ -429,6 +429,16 @@ def main():
 
     map_canvas = wx.lib.statbmp.GenStaticBitmap(root, wx.ID_ANY, wx.NullBitmap,
                                                 size=map_canvas_size)
+
+    osm = OpenStreetMap(
+            wx.Image,
+            lambda image: map_canvas.SetBitmap(wx.Bitmap(image)),
+            lambda data: wx.Image(io.BytesIO(data)),
+            lambda image, tile, x, y: image.Paste(tile, x, y),
+            lambda tile, dz: tile.Scale(tile.Width*2**dz, tile.Height*2**dz),
+            map_canvas.Size.Width, map_canvas.Size.Height,
+            lat, lon, zoom)
+
     map_canvas.Bind(wx.EVT_LEFT_DOWN, on_grab)
     map_canvas.Bind(wx.EVT_LEFT_UP, on_draw)
     map_canvas.Bind(wx.EVT_LEFT_DCLICK, on_complete_drawing)
@@ -440,15 +450,6 @@ def main():
                                                       e.Size.Height))
     map_canvas.Bind(wx.EVT_PAINT, on_paint)
     main_box.Add(map_canvas)
-
-    osm = OpenStreetMap(
-            wx.Image,
-            lambda image: map_canvas.SetBitmap(wx.Bitmap(image)),
-            lambda data: wx.Image(io.BytesIO(data)),
-            lambda image, tile, x, y: image.Paste(tile, x, y),
-            lambda tile, dz: tile.Scale(tile.Width*2**dz, tile.Height*2**dz),
-            map_canvas.Size.Width, map_canvas.Size.Height,
-            lat, lon, zoom)
 
     #######################
     # label for coordinates
