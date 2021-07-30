@@ -526,7 +526,6 @@ def main():
 
     help_box = wx.BoxSizer(wx.VERTICAL)
     help_box.Add(help_text)
-    help_panel.SetSizer(help_box)
 
     help_panel.page = notebook.GetPageCount()
     notebook.AddPage(help_panel, "Help")
