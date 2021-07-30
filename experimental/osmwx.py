@@ -47,7 +47,18 @@ def main():
     lon = 0
     zoom = 0
 
-    def on_mouse(event):
+    def on_left(event):
+        osm.grab(event.x, event.y)
+
+    def on_move(event):
+        if event.Moving():
+            latlon = osm.canvas_to_latlon(event.x, event.y)
+            coor_label.SetLabel(f"{latlon[0]:.4f}, {latlon[1]:.4f} ")
+            main_box.Layout()
+        elif event.LeftIsDown() and event.Dragging():
+            osm.drag(event.x, event.y)
+
+    def on_zoom(event):
         def zoom(x, y, dz, cancel_event):
             if not cancel_event.wait(0.01) and osm.redownload():
                 zoomer_queue.put(osm.draw)
@@ -64,37 +75,28 @@ def main():
 
         nonlocal zoomer
 
-        if event.Moving():
-            latlon = osm.canvas_to_latlon(event.x, event.y)
-            coor_label.SetLabel(f"{latlon[0]:.4f}, {latlon[1]:.4f} ")
-            main_box.Layout()
-        elif event.ButtonDown(wx.MOUSE_BTN_LEFT):
-            osm.grab(event.x, event.y)
-        elif event.Dragging():
-            osm.drag(event.x, event.y)
-        elif event.WheelDelta > 0:
-            if zoomer:
-                zoomer.cancel_event.set()
-                osm.cancel = True
-                zoomer.join()
-                osm.cancel = False
-                zoomer.checker.Stop()
+        if zoomer:
+            zoomer.cancel_event.set()
+            osm.cancel = True
+            zoomer.join()
+            osm.cancel = False
+            zoomer.checker.Stop()
 
-                cancel_event = zoomer.cancel_event
-                cancel_event.clear()
-            else:
-                cancel_event = threading.Event()
+            cancel_event = zoomer.cancel_event
+            cancel_event.clear()
+        else:
+            cancel_event = threading.Event()
 
-            dz = event.WheelRotation / event.WheelDelta * dzoom
+        dz = event.WheelRotation / event.WheelDelta * dzoom
 
-            # if used without osm.draw(), it works; otherwise, only osm.draw()
-            # is visible; timing?
-            osm.rescale(event.x, event.y, dz)
-            zoomer = threading.Thread(target=zoom, args=(event.x, event.y, dz,
-                                                         cancel_event))
-            zoomer.cancel_event = cancel_event
-            zoomer.checker = wx.CallLater(0, check_zoomer)
-            zoomer.start()
+        # if used without osm.draw(), it works; otherwise, only osm.draw()
+        # is visible; timing?
+        osm.rescale(event.x, event.y, dz)
+        zoomer = threading.Thread(target=zoom, args=(event.x, event.y, dz,
+                                                     cancel_event))
+        zoomer.cancel_event = cancel_event
+        zoomer.checker = wx.CallLater(0, check_zoomer)
+        zoomer.start()
 
     def on_paint(event):
         map_canvas.OnPaint(event)
@@ -120,7 +122,9 @@ def main():
 
     map_canvas = wx.lib.statbmp.GenStaticBitmap(root, wx.ID_ANY, wx.NullBitmap,
                                                 size=map_canvas_size)
-    map_canvas.Bind(wx.EVT_MOUSE_EVENTS, on_mouse)
+    map_canvas.Bind(wx.EVT_LEFT_DOWN, on_left)
+    map_canvas.Bind(wx.EVT_MOTION, on_move)
+    map_canvas.Bind(wx.EVT_MOUSEWHEEL, on_zoom)
     map_canvas.Bind(wx.EVT_SIZE, lambda e: osm.resize(e.Size.Width,
                                                       e.Size.Height))
     map_canvas.Bind(wx.EVT_PAINT, on_paint)
