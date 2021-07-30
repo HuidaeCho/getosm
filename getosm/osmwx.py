@@ -496,8 +496,8 @@ def main():
     help_panel = wx.Panel(notebook)
 
     # text for help
-    help_text = wx.TextCtrl(help_panel,
-                            value=textwrap.dedent(f"""\
+    help_text = wx.TextCtrl(
+            help_panel, value=textwrap.dedent(f"""\
             Map operations
             ==============
             Pan:                        Left drag
@@ -515,16 +515,12 @@ def main():
             GitHub repository
             =================
             {github_url}"""),
-                            style=wx.TE_MULTILINE | wx.TE_READONLY |
-                                  wx.TE_AUTO_URL,
-                            size=(notebook_width, notebook_height))
+            style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_AUTO_URL,
+            size=(notebook_width, notebook_height))
     help_text.Bind(wx.EVT_TEXT_URL,
                    lambda e: webbrowser.open(github_url)
                              if e.GetMouseEvent().LeftIsDown() else None)
     help_text.SetFont(geoms_text.GetFont())
-
-    help_box = wx.BoxSizer(wx.VERTICAL)
-    help_box.Add(help_text)
 
     help_panel.page = notebook.GetPageCount()
     notebook.AddPage(help_panel, "Help")
