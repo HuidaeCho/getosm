@@ -39,14 +39,17 @@ else:
 
 
 def main():
+    github_url = "https://github.com/HuidaeCho/getosm"
+
     tag_map = "map"
     tag_geoms = "geoms"
     tag_dragged_bbox = "dragged_bbox"
     tag_github = "github"
-    github_url = "https://github.com/HuidaeCho/getosm"
+
     zoomer = None
     zoomer_queue = queue.Queue()
     dzoom = 0.1
+
     dragged = False
     dragging_bbox = False
     dragged_bbox = []
@@ -55,6 +58,12 @@ def main():
     prev_xy = []
     curr_geom = []
     geoms = []
+
+    point_size = 4
+    line_width = 2
+    fill_stipple = "gray12"
+    geoms_color = "blue"
+    dragged_bbox_color = "green"
 
     lat = 0
     lon = 0
@@ -65,19 +74,12 @@ def main():
         draw_geoms(x, y)
 
     def draw_geoms(x=None, y=None):
-        point_size = 4
         point_half_size = point_size // 2
-        outline = "blue"
-        width = 2
-        fill = outline
-        stipple = "gray12"
 
-        map_canvas.delete(tag_geoms)
-
+        all_geoms = geoms.copy()
         if curr_geom and x and y:
             latlon = list(osm.canvas_to_latlon(x, y))
 
-            all_geoms = geoms.copy()
             g = curr_geom.copy()
             g.append(latlon)
 
@@ -100,8 +102,8 @@ def main():
                                            latlon[1])
                 g.append(latlon)
                 all_geoms.extend(["poly", g])
-        else:
-            all_geoms = geoms.copy()
+
+        map_canvas.delete(tag_geoms)
 
         geom_type = "point"
         g = 0
@@ -118,20 +120,22 @@ def main():
                         x, y = xy[0]
                         oval = (x - point_half_size, y - point_half_size,
                                 x + point_half_size, y + point_half_size)
-                        map_canvas.create_oval(oval, outline=outline,
-                                               width=width, fill=fill,
-                                               tag=tag_geoms)
+                        map_canvas.create_oval(oval, outline=geoms_color,
+                                               width=line_width,
+                                               fill=geoms_color, tag=tag_geoms)
                 elif geom_type == "poly":
                     for xy in osm.get_xy(geom):
-                        map_canvas.create_polygon(xy, outline=outline,
-                                                  width=width, fill=fill,
-                                                  stipple=stipple,
+                        map_canvas.create_polygon(xy, outline=geoms_color,
+                                                  width=line_width,
+                                                  fill=geoms_color,
+                                                  stipple=fill_stipple,
                                                   tag=tag_geoms)
                 else:
                     for xy in osm.get_bbox_xy(geom):
-                        map_canvas.create_rectangle(xy, outline=outline,
-                                                    width=width, fill=fill,
-                                                    stipple=stipple,
+                        map_canvas.create_rectangle(xy, outline=geoms_color,
+                                                    width=line_width,
+                                                    fill=geoms_color,
+                                                    stipple=fill_stipple,
                                                     tag=tag_geoms)
             g += 1
 
@@ -262,15 +266,10 @@ def main():
         zoomer.start()
 
     def on_drag(event):
-        nonlocal dragged, dragging_bbox, dragged_bbox
+        nonlocal dragged, dragging_bbox
 
         if event.state & 0x4:
             # Control + B1-Motion
-            outline = "green"
-            width = 2
-            fill = outline
-            stipple = "gray12"
-
             latlon = osm.canvas_to_latlon(event.x, event.y)
             if not dragging_bbox:
                 dragging_bbox = True
@@ -288,9 +287,10 @@ def main():
 
                 map_canvas.delete(tag_dragged_bbox)
                 for xy in osm.get_bbox_xy((s, n, w, e)):
-                    map_canvas.create_rectangle(xy, outline=outline,
-                                                width=width, fill=fill,
-                                                stipple=stipple,
+                    map_canvas.create_rectangle(xy, outline=dragged_bbox_color,
+                                                width=line_width,
+                                                fill=dragged_bbox_color,
+                                                stipple=fill_stipple,
                                                 tag=tag_dragged_bbox)
         else:
             osm.drag(event.x, event.y, False)
@@ -303,8 +303,7 @@ def main():
         draw_geoms(event.x, event.y)
 
     def on_draw(event):
-        nonlocal dragged, dragging_bbox, dragged_bbox, drawing_bbox
-        nonlocal complete_drawing
+        nonlocal dragged, dragging_bbox, drawing_bbox, complete_drawing
 
         if dragging_bbox:
             ng = len(dragged_bbox)
