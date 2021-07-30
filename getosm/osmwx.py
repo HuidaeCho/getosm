@@ -408,6 +408,10 @@ def main():
                 w, h = xy[1][0] - x, xy[1][1] - y
                 dc.DrawRectangle(x, y, w, h)
 
+    def ok():
+        root.Close()
+        print(geoms)
+
 
     #####
     # GUI
@@ -475,7 +479,10 @@ def main():
 
     # buttons
     ok_button = wx.Button(geoms_panel, label="OK")
+    ok_button.Bind(wx.EVT_BUTTON, lambda e: ok())
+
     cancel_button = wx.Button(geoms_panel, label="Cancel")
+    cancel_button.Bind(wx.EVT_BUTTON, lambda e: root.Close())
 
     geoms_bottom_box = wx.BoxSizer(wx.HORIZONTAL)
     geoms_bottom_box.Add(ok_button, 1)
