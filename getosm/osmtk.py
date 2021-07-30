@@ -299,7 +299,7 @@ def main():
 
     def on_move(event):
         latlon = osm.canvas_to_latlon(event.x, event.y)
-        coor_label.config(text=f" {latlon[0]:.4f}, {latlon[1]:.4f} ")
+        coor_label.config(text=f"{latlon[0]:.4f}, {latlon[1]:.4f} ")
         draw_geoms(event.x, event.y)
 
     def on_draw(event):

@@ -64,7 +64,11 @@ def main():
 
         nonlocal zoomer
 
-        if event.ButtonDown(wx.MOUSE_BTN_LEFT):
+        if event.Moving():
+            latlon = osm.canvas_to_latlon(event.x, event.y)
+            coor_label.SetLabel(f"{latlon[0]:.4f}, {latlon[1]:.4f} ")
+            main_box.Layout()
+        elif event.ButtonDown(wx.MOUSE_BTN_LEFT):
             osm.grab(event.x, event.y)
         elif event.Dragging():
             osm.drag(event.x, event.y)
