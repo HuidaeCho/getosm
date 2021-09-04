@@ -302,22 +302,13 @@ def main():
             try:
                 draw_map = zoomer_queue.get_nowait()
             except:
-                zoomer.checker = wx.CallLater(0, check_zoomer)
+                zoomer.checker = wx.CallLater(1, check_zoomer)
             else:
                 draw_map()
 
         nonlocal zoomer
 
         dz = event.WheelRotation / event.WheelDelta * dzoom
-
-        # if used without osm.draw(), it works; otherwise, only osm.draw()
-        # is visible; timing?
-        osm.rescale(event.x, event.y, dz)
-        zoomer = threading.Thread(target=zoom, args=(event.x, event.y, dz,
-                                                     cancel_event))
-        zoomer.cancel_event = cancel_event
-        zoomer.checker = wx.CallLater(0, check_zoomer)
-        zoomer.start()
 
         if event.ControlDown():
             if dz > 0:
@@ -341,6 +332,14 @@ def main():
         else:
             cancel_event = threading.Event()
 
+        # if used without osm.draw(), it works; otherwise, only osm.draw()
+        # is visible; timing?
+        osm.rescale(event.x, event.y, dz)
+        zoomer = threading.Thread(target=zoom, args=(event.x, event.y, dz,
+                                                     cancel_event))
+        zoomer.cancel_event = cancel_event
+        zoomer.checker = wx.CallLater(1, check_zoomer)
+        zoomer.start()
 
     def on_paint(event):
         point_half_size = point_size // 2
