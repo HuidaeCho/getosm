@@ -338,7 +338,10 @@ def main():
         zoomer = threading.Thread(target=zoom, args=(event.x, event.y, dz,
                                                      cancel_event))
         zoomer.cancel_event = cancel_event
-        zoomer.checker = wx.CallLater(1, check_zoomer)
+        delay = 0
+        if sys.platform == "darwin":
+            delay = 1
+        zoomer.checker = wx.CallLater(delay, check_zoomer)
         zoomer.start()
 
     def on_paint(event):
