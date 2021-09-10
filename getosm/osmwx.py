@@ -42,6 +42,9 @@ def main():
     github_url = "https://github.com/HuidaeCho/getosm"
 
     zoomer = None
+    # timer delay must be positive on macOS
+    # https://github.com/wxWidgets/wxWidgets/blob/178ac74596e54a24046c08fcfeb1d65fa8060957/src/osx/core/timer.cpp#L69
+    zoomer_delay = 1 if sys.platform == "darwin" else 0
     zoomer_queue = queue.Queue()
     dzoom = 0.1
 
@@ -302,7 +305,7 @@ def main():
             try:
                 draw_map = zoomer_queue.get_nowait()
             except:
-                zoomer.checker = wx.CallLater(0, check_zoomer)
+                zoomer.checker = wx.CallLater(zoomer_delay, check_zoomer)
             else:
                 draw_map()
 
@@ -338,7 +341,7 @@ def main():
         zoomer = threading.Thread(target=zoom, args=(event.x, event.y, dz,
                                                      cancel_event))
         zoomer.cancel_event = cancel_event
-        zoomer.checker = wx.CallLater(0, check_zoomer)
+        zoomer.checker = wx.CallLater(zoomer_delay, check_zoomer)
         zoomer.start()
 
     def on_paint(event):
