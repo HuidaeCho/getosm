@@ -15,9 +15,9 @@ Requirements
 
 GetOSM uses the following standard Python modules:
 
-- `sys <https://docs.python.org/3/library/sys.html>`_
-- `math <https://docs.python.org/3/library/math.html>`_
-- `urllib.request <https://docs.python.org/3/library/urllib.request.html>`_
+* `sys <https://docs.python.org/3/library/sys.html>`_
+* `math <https://docs.python.org/3/library/math.html>`_
+* `urllib.request <https://docs.python.org/3/library/urllib.request.html>`_
 
 Installation
 ------------
