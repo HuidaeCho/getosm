@@ -1,14 +1,14 @@
-GetOSM
-======
-
-GetOSM is an OpenStreetMap downloader written in Python that is agnostic of GUI frameworks.
-It is used with `tkinter <https://docs.python.org/3/library/tkinter.html>`_ by `ProjPicker <https://github.com/HuidaeCho/projpicker>`_.
-
 .. toctree::
    :caption: Table of contents
    :hidden:
 
    index
+
+GetOSM
+======
+
+GetOSM is an OpenStreetMap downloader written in Python that is agnostic of GUI frameworks.
+It is used with `tkinter <https://docs.python.org/3/library/tkinter.html>`_ by `ProjPicker <https://github.com/HuidaeCho/projpicker>`_.
 
 Requirements
 ------------
