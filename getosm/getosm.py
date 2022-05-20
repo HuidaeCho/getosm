@@ -323,7 +323,7 @@ class OpenStreetMap:
                 with urllib.request.urlopen(req) as f:
                     self.cached_tiles[tile_key] = CachedTile(f.read(), True)
                     self.message(f"{tile_url} downloaded")
-            except Exception as e:
+            except Exception:
                 self.message(f"{tile_url}: Failed to download")
         return tile_key
 
@@ -388,7 +388,6 @@ class OpenStreetMap:
                 if self.cancel:
                     self.message("download_map canceled")
                     break
-                tile_url = self.get_tile_url(xt, yi, z)
                 tile_key = self.download_tile(xt, yi, z)
                 tile_x = xoff + (xi - x) * 256
                 while tile_x <= -256:
