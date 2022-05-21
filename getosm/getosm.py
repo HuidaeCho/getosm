@@ -138,11 +138,16 @@ class OpenStreetMap:
         self.lat_min = -85.0511
         self.lat_max = 85.0511
         self.dz = 0
+        self.num_tiles = 0
         self.tiles = []
         self.rescaled_tiles = []
         # TODO: Tile caching mechanism
+        self.max_cached_tiles = 0
         self.cached_tiles = {}
         self.cancel = False
+
+        self.x = self.xmin = self.xmax = self.y = self.ymin = self.ymax = None
+        self.xoff = self.yoff = self.grab_x = self.grab_y = None
 
         self.redownload()
         self.draw()
@@ -349,7 +354,7 @@ class OpenStreetMap:
             sessions to save data traffic and CPU time.
         """
         z = min(max(z, self.z_min), self.z_max)
-        ntiles = 2**z
+        num_tiles = 2**z
 
         # calculate x,y offsets to lat,lon within width,height
         xc, yc = self.latlon_to_tile(lat, lon, z)
@@ -364,14 +369,15 @@ class OpenStreetMap:
         xmin = x - math.ceil(xoff / 256)
         ymin = max(y - math.ceil(yoff / 256), 0)
         xmax = x + math.ceil((self.width - xoff - 256) / 256)
-        ymax = min(y + math.ceil((self.height - yoff - 256) / 256), ntiles - 1)
+        ymax = min(y + math.ceil((self.height - yoff - 256) / 256),
+                   num_tiles - 1)
 
         self.lat = lat
         self.lon = lon
         self.x = x
         self.y = y
         self.z = z
-        self.ntiles = ntiles
+        self.num_tiles = num_tiles
         self.xmin = xmin
         self.xmax = xmax
         self.ymin = ymin
@@ -383,7 +389,7 @@ class OpenStreetMap:
         self.tiles.clear()
 
         for xi in range(xmin, xmax + 1):
-            xt = xi % ntiles
+            xt = xi % num_tiles
             for yi in range(ymin, ymax + 1):
                 if self.cancel:
                     self.message("download_map canceled")
@@ -391,9 +397,9 @@ class OpenStreetMap:
                 tile_key = self.download_tile(xt, yi, z)
                 tile_x = xoff + (xi - x) * 256
                 while tile_x <= -256:
-                    tile_x += 256 * ntiles
+                    tile_x += 256 * num_tiles
                 while tile_x > self.width:
-                    tile_x -= 256 * ntiles
+                    tile_x -= 256 * num_tiles
                 tile_y = yoff + (yi - y) * 256
                 self.tiles.append(Tile(tile_key, tile_x, tile_y, z))
             if self.cancel:
@@ -738,9 +744,9 @@ class OpenStreetMap:
             list: List of lists of lists of canvas x and y in pixels.
         """
         outxy = []
-        n = self.width // (256 * self.ntiles)
+        n = self.width // (256 * self.num_tiles)
         for i in range(-n // 2 - 1, n // 2 + 2):
-            dx = i * 256 * self.ntiles
+            dx = i * 256 * self.num_tiles
             p = []
             for coor in xy:
                 x, y = coor
@@ -791,7 +797,7 @@ class OpenStreetMap:
             l, t = self.latlon_to_canvas(n, w)
             r, b = self.latlon_to_canvas(s, e)
             if w > e:
-                l -= 256 * self.ntiles
+                l -= 256 * self.num_tiles
             xy = [[l, t], [r, b]]
             outxy.extend(self.repeat_xy(xy))
         return outxy
