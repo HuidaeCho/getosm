@@ -8,6 +8,18 @@ GUI frameworks. It is used with
 [tkinter](https://docs.python.org/3/library/tkinter.html) by
 [ProjPicker](https://github.com/HuidaeCho/projpicker).
 
+<!-- vim-markdown-toc GFM -->
+
+* [Requirements](#requirements)
+* [Installation](#installation)
+* [Demo GUIs](#demo-guis)
+  * [osmtk: tkinter demo](#osmtk-tkinter-demo)
+  * [osmwx: wxPython demo](#osmwx-wxpython-demo)
+* [Disclaimer and OpenStreetMap tile usage policy](#disclaimer-and-openstreetmap-tile-usage-policy)
+* [License](#license)
+
+<!-- vim-markdown-toc -->
+
 ## Requirements
 
 GetOSM uses the following standard Python modules:
