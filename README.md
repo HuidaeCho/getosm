@@ -31,6 +31,14 @@ pip install getosm
 
 ![image](https://user-images.githubusercontent.com/7456117/127703838-85809b56-d081-4db1-9184-d3d2673d1c63.png)
 
+## Disclaimer and OpenStreetMap policies
+
+GetOSM is NOT an official Python package of
+[the OpenStreetMap Foundation](https://osmfoundation.org/).
+
+Using this program to bulk-download OpenStreetMap is strictly prohibited by
+[their tile usage policy](https://operations.osmfoundation.org/policies/tiles/).
+
 ## License
 
 Copyright (C) 2021 [Huidae Cho](https://idea.isnew.info/)
