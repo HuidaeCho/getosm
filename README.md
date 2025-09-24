@@ -37,7 +37,8 @@ GetOSM is NOT an official Python package of
 [the OpenStreetMap Foundation](https://osmfoundation.org/).
 
 Using this program to bulk-download OpenStreetMap is strictly prohibited by
-[their tile usage policy](https://operations.osmfoundation.org/policies/tiles/).
+[their tile usage policy](https://operations.osmfoundation.org/policies/tiles/)
+and will get you blocked.
 
 ## License
 
