@@ -297,7 +297,7 @@ class OpenStreetMap:
         Returns:
             str: URL for the tile at tile x,y at the zoom level z.
         """
-        return f"http://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        return f"https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 
     def download_tile(self, x, y, z):
         """
